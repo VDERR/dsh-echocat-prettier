@@ -2,9 +2,9 @@
   <img src="assets/echocat-logo.png" width="132" alt="EchoCat LOGO">
 </p>
 
-<h1 align="center">EchoCat Prettier</h1>
+<h1 align="center">DSH 聊天内容 排版</h1>
 
-<p align="center"><b>让 DSH 的 AI 回复拥有清楚的层级、丰富的视觉风格和自然的互动感。</b></p>
+<p align="center"><b>EchoCat Prettier · 让 AI 回复拥有清楚的层级、丰富的视觉风格和自然的互动感。</b></p>
 
 <p align="center">
   <a href="https://github.com/VDERR/dsh-echocat-prettier/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/VDERR/dsh-echocat-prettier?style=flat-square&color=4a91a3"></a>
@@ -24,7 +24,7 @@
 
 下面两栏使用的是同一段 AI 原始回答。插件只重组浏览器里的显示层级，不改回答文字、顺序和结论。
 
-![关闭美化与清透留白默认风格对比](docs/images/echocat-prettier-before-after-v2.3.4.png)
+![关闭美化与现代渐变风格对比](docs/images/echocat-prettier-before-after-v2.3.4.png)
 
 <details>
   <summary><b>展开查看：开发者终端风格</b></summary>
