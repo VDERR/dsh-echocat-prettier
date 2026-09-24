@@ -24,7 +24,7 @@
 
 下面两栏使用的是同一段 AI 原始回答。插件只重组浏览器里的显示层级，不改回答文字、顺序和结论。
 
-![关闭美化与现代渐变风格对比](docs/images/echocat-prettier-before-after-v2.3.4.png)
+![关闭美化与清透留白默认排版对比](docs/images/echocat-prettier-before-after-v2.3.4.png)
 
 <details>
   <summary><b>展开查看：开发者终端风格</b></summary>
