@@ -1,0 +1,12 @@
+node_modules/
+test-output/
+work/
+deliverables/
+.DS_Store
+Thumbs.db
+*.log
+*.tgz
+*.zip
+.env
+.env.*
+!.env.example

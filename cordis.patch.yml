@@ -1,0 +1,8 @@
+# DSH/Cordis bundle; installed and enabled by the user only.
+- insert:
+    - id: echocat-prettier
+      name: dsh-echocat-prettier
+      config:
+        guideMarkdown: false
+        autoImages: false
+        naturalEmoji: false
