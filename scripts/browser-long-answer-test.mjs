@@ -32,5 +32,5 @@ try{
  const restored=await page.evaluate(()=>{const prose=document.querySelector('#after [data-ecp-prose]');window.preview.settings.update({enabled:false});return{textEqual:prose.textContent===window.__ecpLongText,htmlEqual:prose.innerHTML===window.__ecpLongHTML,nodesEqual:[...prose.children].every((node,index)=>node===window.__ecpLongNodes[index]),longAttribute:prose.hasAttribute('data-ecp-long-content')};});
  assert.deepEqual(restored,{textEqual:true,htmlEqual:true,nodesEqual:true,longAttribute:false});record('disabling the plugin restores the exact host HTML without replacing any answer node');assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
 }finally{
- await writeFile('test-output/browser-long-answer-results.json',JSON.stringify({version:'2.3.3',liveDSH:false,checks,errors,external},null,2));await browser.close();await new Promise(resolve=>server.close(resolve));console.log(JSON.stringify({pass:checks.length,errors,external},null,2));
+ await writeFile('test-output/browser-long-answer-results.json',JSON.stringify({version:'2.3.5',liveDSH:false,checks,errors,external},null,2));await browser.close();await new Promise(resolve=>server.close(resolve));console.log(JSON.stringify({pass:checks.length,errors,external},null,2));
 }

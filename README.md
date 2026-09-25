@@ -64,7 +64,7 @@ dsh plugin --profile web add dsh-echocat-prettier
 dsh plugin --profile web add github:VDERR/dsh-echocat-prettier
 ```
 
-安装或升级后需要重启 DSH Desktop。也可以从 [Releases](https://github.com/VDERR/dsh-echocat-prettier/releases/latest) 下载 ZIP，并参照[安装、卸载与验收说明](docs/20260924_GPT安装卸载与验收说明_V2.3.4.md)操作。
+安装或升级后需要重启 DSH Desktop。也可以从 [Releases](https://github.com/VDERR/dsh-echocat-prettier/releases/latest) 下载 ZIP，并参照[安装、卸载与验收说明](docs/20260925_GPT安装卸载与验收说明_V2.3.5.md)操作。
 
 ## 准确性、网络与隐私
 
@@ -89,6 +89,6 @@ npm run test:long
 
 服务端入口为 `lib/index.js`，客户端入口为 `lib/client.js`，DSH/Cordis 清单为 `cordis.patch.yml`。仓库包含构建后的 `lib/`，便于 DSH 从 GitHub 直接安装。
 
-当前版本：**0.23.4 / V2.3.4**。自动测试、浏览器宿主夹具和长回复压力测试均已通过；不同 DSH Desktop 版本仍可能因宿主 DOM 或插件 API 变化出现兼容性差异。
+当前版本：**0.23.5 / V2.3.5**。已适配 DSH `v0.1.7-rc.2` 的 36×36 折叠侧边栏按钮规格；自动测试、浏览器宿主夹具和长回复压力测试均已通过。
 
 第三方组件与数据源说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

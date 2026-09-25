@@ -94,7 +94,7 @@ try {
 
 $manifestPath=Assert-InRoot (Join-Path $out $names.manifest)
 $manifest=[ordered]@{
-  release='V2.3.4'
+  release='V2.3.5'
   packageVersion=$pack.version
   liveDSHVerified=$false
   fileCount=$files.Count

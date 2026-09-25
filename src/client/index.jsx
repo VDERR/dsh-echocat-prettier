@@ -91,9 +91,9 @@ export function apply(ctx){
     else setUpdateState({status:'current',label:'已是最新版',url:release.html_url||RELEASES_URL});
    }catch{setUpdateState({status:'unavailable',label:'打开更新页',url:RELEASES_URL});}
   };
-  return <div className="ecp-sidebar-control" data-wide={wide}>
-   <button type="button" className="ecp-sidebar-open" data-state={state.state} title={'回复美化设置 · '+statusLabel(state)} onClick={open}><span className="ecp-aa">Aa</span>{wide&&<span>回复美化</span>}</button>
-   <button type="button" className="ecp-sidebar-switch" role="switch" aria-checked={saved.enabled} title={saved.enabled?'关闭回复美化':'开启回复美化'} onClick={()=>settings.update({enabled:!saved.enabled})}><i/></button>
+  return <div className="ecp-sidebar-control" data-wide={wide} data-enabled={saved.enabled}>
+   <button type="button" className="ecp-sidebar-open" data-state={state.state} aria-label={'回复美化设置（'+(saved.enabled?'已开启':'已关闭')+'）'} title={'回复美化设置 · '+statusLabel(state)} onClick={open}><span className="ecp-aa">Aa</span>{wide&&<span>回复美化</span>}</button>
+   {wide&&<button type="button" className="ecp-sidebar-switch" role="switch" aria-checked={saved.enabled} title={saved.enabled?'关闭回复美化':'开启回复美化'} onClick={()=>settings.update({enabled:!saved.enabled})}><i/></button>}
    <dialog ref={ref} className="ecp-dialog ecp-final-dialog" aria-label="EchoCat 回复美化设置" onCancel={close} onClick={event=>{if(event.target===ref.current)close();}}>
     <div className="ecp-settings" onClick={event=>event.stopPropagation()}>
      <header className="ecp-dialog-head">

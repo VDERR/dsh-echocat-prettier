@@ -27,14 +27,14 @@ test('per-style colors are sanitized, isolated, persisted, and resettable',()=>{
  const invalid=normalize({visualStyle:'missing',diyLayout:'missing',stylePalettes:[]});assert.equal(invalid.visualStyle,'clear-space');assert.equal(invalid.diyLayout,'native');assert.deepEqual(invalid.stylePalettes,{});
 });
 
-test('V2.3.4 count controls are bounded, persisted, and default to richer decoration',()=>{
+test('V2.3.5 count controls are bounded, persisted, and default to richer decoration',()=>{
  const values=new Map(),storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)},settings=createSettings(storage);
  assert.equal(settings.get().memeCount,'2');assert.equal(settings.get().emojiCount,'6');assert.equal(settings.get().memeFrequency,'lively');
  settings.update({memeCount:'4',emojiCount:'8'});assert.equal(createSettings(storage).get().memeCount,'4');assert.equal(createSettings(storage).get().emojiCount,'8');
  const invalid=normalize({memeCount:'99',emojiCount:'99'});assert.equal(invalid.memeCount,'2');assert.equal(invalid.emojiCount,'6');
 });
 
-test('V2.3.4 publishes branded update and repository metadata without touching answer content',()=>{
+test('V2.3.5 publishes branded update and repository metadata without touching answer content',()=>{
  const pkg=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));
  const source=readFileSync(new URL('../src/client/index.jsx',import.meta.url),'utf8');
  const build=readFileSync(new URL('../scripts/build.mjs',import.meta.url),'utf8');

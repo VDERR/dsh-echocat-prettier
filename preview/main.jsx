@@ -102,7 +102,7 @@ const layouts=[
 const LAYOUT_MAP=Object.fromEntries(layouts.map(x=>[x.id,x]));
 const initialCommon={density:'spacious',heading:'striking',media:'rich',motion:'clear'};
 const initialStyle={tone:'balanced',shape:'balanced',depth:'balanced',signature:'balanced'};
-const storageKey='echocat-prettier:preview:v2.3.4',previousStorageKey='echocat-prettier:preview:v2.3.3';
+const storageKey='echocat-prettier:preview:v2.3.5',previousStorageKey='echocat-prettier:preview:v2.3.4';
 const loadState=()=>{try{return JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(previousStorageKey)||'{}')}catch{return{}}};
 
 function Segmented({name,value,options,onChange,test}){
@@ -162,7 +162,7 @@ function App(){
  };
  return <main className={'v23-page'+(narrow?' is-narrow':'')+(stress?' is-stress':'')}>
    <header className="topbar">
-<div><span className="eyebrow">ECHOCAT PRETTIER · V2.3.4</span><h1>风格 × 排版双层预设</h1><p>15 套视觉风格与 9 套结构排版可自由组合；长回复自动进入性能保护，不改 AI 原文、顺序和结论。</p></div>
+<div><span className="eyebrow">ECHOCAT PRETTIER · V2.3.5</span><h1>风格 × 排版双层预设</h1><p>15 套视觉风格与 9 套结构排版可自由组合；兼容新版 DSH 折叠侧边栏，不改 AI 原文、顺序和结论。</p></div>
       <div className="quick-actions"><button className="layout-diy-trigger" aria-pressed={diyOpen} id="layout-diy" onClick={()=>setDiyOpen(x=>!x)}>▦ 排版 DIY</button><button aria-pressed={stress} id="stress" onClick={()=>setStress(x=>!x)}>{stress?'普通内容':'长文验收'}</button><button aria-pressed={narrow} id="width" onClick={()=>setNarrow(x=>!x)}>{narrow?'恢复宽屏':'窄栏验收'}</button><button aria-pressed={dark} id="theme" onClick={()=>setDark(x=>!x)}>{dark?'浅色界面':'深色界面'}</button></div>
    </header>
    <section className="preset-panel" aria-label="风格预设">
@@ -184,8 +184,8 @@ function App(){
      <article className="compare-cell before-cell"><div className="compare-caption"><b>关闭美化</b><span>宿主原始样式</span></div><div className="message before" id="before"><div dangerouslySetInnerHTML={{__html:currentFixture.html}}/></div></article>
 <article className="compare-cell after-cell"><div className="compare-caption"><b>开启美化 · {currentStyle.label}</b><span>{currentLayout.label} · {hasCustomPalette?'自定义配色':'风格默认色'} · {common.heading==='striking'?'醒目标题':'自定义标题'}</span></div><div key={styleId+'-'+layoutId+'-'+replay} className="message after v23-stage" id="after" data-v233-version="2.3.3" data-v228-layout={layoutId} data-v227-custom-palette={hasCustomPalette?'true':'false'} data-v23-style={styleId} data-v23-density={common.density} data-v23-heading={common.heading} data-v23-media={common.media} data-v23-motion={common.motion} data-v23-tone={custom.tone} data-v23-shape={custom.shape} data-v23-depth={custom.depth} data-v23-signature={custom.signature} style={{'--v227-primary':palette.primary,'--v227-secondary':palette.secondary,'--v227-accent':palette.accent,'--v227-ink':contrastInk(palette.primary)}}><div id="after-row" data-chat-flow-kind="assistant-step" dangerouslySetInnerHTML={{__html:currentFixture.html}}/></div></article>
    </section>
-   <div className="preview-sidebar-demo"><span>DSH 左侧栏底部</span><Controls wide/></div>
-<footer>V2.3.4 网页版离线验收 · EchoCat 品牌 × GitHub 更新入口 × 长回复性能保护 · 当前未安装到 DSH</footer>
+   <div className="preview-sidebar-demo"><span>DSH 左侧栏底部</span><div className="preview-sidebar-wide"><Controls wide/></div><div className="preview-sidebar-collapsed" aria-label="折叠侧栏 36 像素验收"><Controls/></div></div>
+<footer>V2.3.5 网页版离线验收 · 新版 DSH 36×36 折叠侧边栏 × 长回复性能保护 · 当前未安装到 DSH</footer>
  </main>;
 }
 
