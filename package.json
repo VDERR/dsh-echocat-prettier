@@ -1,6 +1,6 @@
 {
   "name": "dsh-echocat-prettier",
-  "version": "0.23.5",
+  "version": "0.23.6",
   "description": "EchoCat Prettier：为 DSH AI 回复提供多风格排版、emoji、主题表情包与长回复性能保护。",
   "type": "module",
   "main": "lib/index.js",
@@ -15,8 +15,8 @@
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
-    "docs/20260925_GPT安装卸载与验收说明_V2.3.5.md",
-    "docs/20260925_GPT新版DSH侧边栏兼容报告_V2.3.5.md"
+    "docs/20260925_GPT安装卸载与验收说明_V2.3.6.md",
+    "docs/20260925_GPT新版DSH左上侧栏入口兼容报告_V2.3.6.md"
   ],
   "license": "MIT",
   "author": "VDERR",

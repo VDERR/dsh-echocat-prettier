@@ -36,8 +36,12 @@ const hostStyle=document.createElement('style');
 hostStyle.dataset.pluginCss='@deepseek-ai/dsh-client-ui-chat/AssistantMarkdown.module.css';
 hostStyle.textContent=fixture.assistantCSS;document.head.append(hostStyle);
 const mdStyle=document.createElement('style');mdStyle.textContent=fixture.css;document.head.append(mdStyle);
-let Controls=()=>null;
-const runtime=apply({slots:{inject:(_,fn)=>fn(),register:(seat,C)=>{if(seat.name==='sidebar.footer.action')Controls=C;return()=>{};}},effect:fn=>fn()});
+let PanelIcon=()=>null,SettingsOverlay=()=>null,SettingsLauncher=()=>null;
+const slotOptions={};
+const runtime=apply({
+ slots:{inject:(_,fn)=>fn(),register:(seat,C)=>{slotOptions[seat.name]=seat;if(seat.name==='sidebar.panellist')PanelIcon=C;if(seat.name==='shell.overlay')SettingsOverlay=C;if(seat.name==='main')SettingsLauncher=C;return()=>{};}},
+ layout:{selectPanel:()=>{}},effect:fn=>fn()
+});
 runtime.settings.reset();
 runtime.settings.update({enabled:true,layout:'cards',density:'comfortable',radius:'round',shadow:'soft',motionStyle:'still',glassMotion:false,elementMotion:'none',headingScale:'strong',contentWidth:'wide',visualEmoji:true,faceEmoji:true,emojiDensity:'lively',emojiCount:'6',outline:true,autoMeme:true,memeFrequency:'lively',memeCount:'2',animatedMeme:'auto',memeSize:'standard',mediaGallery:false,mediaLevel:'off'});
 const previewSheet=document.querySelector('[data-v23-preview]');if(previewSheet)document.head.append(previewSheet);
@@ -102,7 +106,7 @@ const layouts=[
 const LAYOUT_MAP=Object.fromEntries(layouts.map(x=>[x.id,x]));
 const initialCommon={density:'spacious',heading:'striking',media:'rich',motion:'clear'};
 const initialStyle={tone:'balanced',shape:'balanced',depth:'balanced',signature:'balanced'};
-const storageKey='echocat-prettier:preview:v2.3.5',previousStorageKey='echocat-prettier:preview:v2.3.4';
+const storageKey='echocat-prettier:preview:v2.3.6',previousStorageKey='echocat-prettier:preview:v2.3.5';
 const loadState=()=>{try{return JSON.parse(localStorage.getItem(storageKey)||localStorage.getItem(previousStorageKey)||'{}')}catch{return{}}};
 
 function Segmented({name,value,options,onChange,test}){
@@ -133,6 +137,7 @@ function App(){
  const [stress,setStress]=useState(false);
  const [dark,setDark]=useState(false);
  const [replay,setReplay]=useState(0);
+ const [launchKey,setLaunchKey]=useState(0);
  const currentStyle=STYLE_MAP[styleId];
  const currentLayout=LAYOUT_MAP[layoutId];
  const custom={...initialStyle,...overrides[styleId]};
@@ -158,11 +163,12 @@ function App(){
    setCommon:(field,value)=>updateCommon(field,value),
     setStyleControl:(field,value)=>updateCustom(field,value),
     setPalette:(field,value)=>updatePalette(field,value),resetPalette,getPalette:()=>palette,
-    getState:()=>({styleId,common,custom,overrides,palette,palettes,layoutId})
+    getState:()=>({styleId,common,custom,overrides,palette,palettes,layoutId}),slotOptions
  };
  return <main className={'v23-page'+(narrow?' is-narrow':'')+(stress?' is-stress':'')}>
+   <SettingsOverlay/>{launchKey>0&&<div hidden><SettingsLauncher key={launchKey}/></div>}
    <header className="topbar">
-<div><span className="eyebrow">ECHOCAT PRETTIER · V2.3.5</span><h1>风格 × 排版双层预设</h1><p>15 套视觉风格与 9 套结构排版可自由组合；兼容新版 DSH 折叠侧边栏，不改 AI 原文、顺序和结论。</p></div>
+<div><span className="eyebrow">ECHOCAT PRETTIER · V2.3.6</span><h1>风格 × 排版双层预设</h1><p>15 套视觉风格与 9 套结构排版可自由组合；使用新版 DSH 官方上方侧栏入口，不改 AI 原文、顺序和结论。</p></div>
       <div className="quick-actions"><button className="layout-diy-trigger" aria-pressed={diyOpen} id="layout-diy" onClick={()=>setDiyOpen(x=>!x)}>▦ 排版 DIY</button><button aria-pressed={stress} id="stress" onClick={()=>setStress(x=>!x)}>{stress?'普通内容':'长文验收'}</button><button aria-pressed={narrow} id="width" onClick={()=>setNarrow(x=>!x)}>{narrow?'恢复宽屏':'窄栏验收'}</button><button aria-pressed={dark} id="theme" onClick={()=>setDark(x=>!x)}>{dark?'浅色界面':'深色界面'}</button></div>
    </header>
    <section className="preset-panel" aria-label="风格预设">
@@ -184,8 +190,8 @@ function App(){
      <article className="compare-cell before-cell"><div className="compare-caption"><b>关闭美化</b><span>宿主原始样式</span></div><div className="message before" id="before"><div dangerouslySetInnerHTML={{__html:currentFixture.html}}/></div></article>
 <article className="compare-cell after-cell"><div className="compare-caption"><b>开启美化 · {currentStyle.label}</b><span>{currentLayout.label} · {hasCustomPalette?'自定义配色':'风格默认色'} · {common.heading==='striking'?'醒目标题':'自定义标题'}</span></div><div key={styleId+'-'+layoutId+'-'+replay} className="message after v23-stage" id="after" data-v233-version="2.3.3" data-v228-layout={layoutId} data-v227-custom-palette={hasCustomPalette?'true':'false'} data-v23-style={styleId} data-v23-density={common.density} data-v23-heading={common.heading} data-v23-media={common.media} data-v23-motion={common.motion} data-v23-tone={custom.tone} data-v23-shape={custom.shape} data-v23-depth={custom.depth} data-v23-signature={custom.signature} style={{'--v227-primary':palette.primary,'--v227-secondary':palette.secondary,'--v227-accent':palette.accent,'--v227-ink':contrastInk(palette.primary)}}><div id="after-row" data-chat-flow-kind="assistant-step" dangerouslySetInnerHTML={{__html:currentFixture.html}}/></div></article>
    </section>
-   <div className="preview-sidebar-demo"><span>DSH 左侧栏底部</span><div className="preview-sidebar-wide"><Controls wide/></div><div className="preview-sidebar-collapsed" aria-label="折叠侧栏 36 像素验收"><Controls/></div></div>
-<footer>V2.3.5 网页版离线验收 · 新版 DSH 36×36 折叠侧边栏 × 长回复性能保护 · 当前未安装到 DSH</footer>
+   <div className="preview-sidebar-demo"><span>DSH 左侧栏上方 · 固定在“插件 / 技能调用报告”之后、“工作区”之前</span><div className="preview-sidebar-host"><div className="preview-sidebar-upper"><button type="button" className="preview-panel-row" onClick={()=>setLaunchKey(value=>value+1)}><PanelIcon size={16} active={false}/><span>回复美化</span></button></div><div className="preview-workspace-divider">工作区</div></div></div>
+<footer>V2.3.6 网页版离线验收 · 新版 DSH 官方上方侧栏入口 × 长回复性能保护 · 当前未安装到 DSH</footer>
  </main>;
 }
 

@@ -28,5 +28,5 @@ const standalone=html.replace('<link rel="stylesheet" href="./preview.css" data-
   .replace('<script src="./app.js"></script>',()=>'<script>'+js.replace(/<\/script/gi,'<\\/script')+'</script>')
   .replace('<script src="../lib/client.js"></script>',()=>'<script>'+plugin.replace(/<\/script/gi,'<\\/script')+'</script>')
   .replace('</head>',()=>'<!-- Offline preview bundles React and React DOM, licensed under MIT.\n'+license+'\nHost CSS fixture (DeepSeek Harness):\n'+hostLicense+'\n--></head>');
-await writeFile('deliverables/20260925_GPTEchoCat新版DSH侧边栏兼容离线预览_V2.3.5.html',standalone);
-console.log('Built V2.3.5 preview and standalone HTML.');
+await writeFile('deliverables/20260925_GPTEchoCat新版DSH左上侧栏入口离线预览_V2.3.6.html',standalone);
+console.log('Built V2.3.6 preview and standalone HTML.');

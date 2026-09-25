@@ -11,9 +11,15 @@ import finalControlsCss from './final-controls.css';
 import logoUrl from '../../assets/echocat-logo.png';
 
 export const name='dsh-echocat-prettier';
-export const inject=['slots'];
+export const inject=['slots','layout'];
 const REPOSITORY_URL='https://github.com/VDERR/dsh-echocat-prettier';
 const RELEASES_URL=REPOSITORY_URL+'/releases/latest';
+const PANEL_ID='echocat-prettier-settings';
+
+function createOpenSignal(){
+ let version=0;const listeners=new Set();
+ return {get:()=>version,subscribe:listener=>{listeners.add(listener);return()=>listeners.delete(listener);},open:()=>{version+=1;for(const listener of listeners)listener();}};
+}
 
 function versionParts(value){return String(value??'').replace(/^v/i,'').split('.').map(part=>Number.parseInt(part,10)||0);}
 function isNewerVersion(remote,local){
@@ -67,17 +73,17 @@ export function apply(ctx){
  let storage;try{storage=window.localStorage;}catch{}
  const settings=createSettings(storage),controller=installTypography(document,settings,contentCss+'\n'+finalCss);
  const style=document.createElement('style');style.dataset.plugin=name;style.dataset.echocatPrettier='controls';style.dataset.ecpVersion=VERSION;style.textContent=controlsCss+'\n'+finalControlsCss;document.head.append(style);
- const dialogs=new Set();
- function SidebarControl({wide=false}={}){
-  const saved=useSyncExternalStore(settings.subscribe,settings.get),state=useSyncExternalStore(controller.subscribe,controller.getSnapshot);
-  const ref=useRef(null),[draft,setDraft]=useState(()=>({...saved})),[layoutOpen,setLayoutOpen]=useState(false),[updateState,setUpdateState]=useState({status:'idle',label:'检查更新',url:RELEASES_URL});
+ const dialogs=new Set(),openSignal=createOpenSignal();
+ function SettingsOverlay(){
+  const request=useSyncExternalStore(openSignal.subscribe,openSignal.get),state=useSyncExternalStore(controller.subscribe,controller.getSnapshot);
+  const ref=useRef(null),[draft,setDraft]=useState(()=>({...settings.get()})),[layoutOpen,setLayoutOpen]=useState(false),[updateState,setUpdateState]=useState({status:'idle',label:'检查更新',url:RELEASES_URL});
   useEffect(()=>{const dialog=ref.current;dialogs.add(dialog);return()=>{dialog?.close();dialogs.delete(dialog);};},[]);
+  useEffect(()=>{if(request<1)return;setDraft({...settings.get()});setLayoutOpen(false);ref.current?.showModal();},[request]);
   const change=patch=>setDraft(value=>normalize({...value,...patch}));
   const chooseStyle=id=>{const preset=STYLE_MAP[id];if(preset)setDraft(value=>normalize({...value,...preset.defaults,visualStyle:id}));};
   const chooseLayout=id=>{if(LAYOUT_MAP[id])change({diyLayout:id});};
   const updateColor=(field,raw)=>{const color=cleanHex(raw);if(!color)return;setDraft(value=>normalize({...value,stylePalettes:{...value.stylePalettes,[value.visualStyle]:{...colorsFor(value),[field]:color}}}));};
   const resetColors=()=>setDraft(value=>{const palettes={...value.stylePalettes};delete palettes[value.visualStyle];return normalize({...value,stylePalettes:palettes});});
-  const open=()=>{setDraft({...settings.get()});setLayoutOpen(false);ref.current?.showModal();};
   const close=()=>ref.current?.close(),save=()=>{settings.update(draft);close();};
   const openExternal=url=>window.open(url,'_blank','noopener,noreferrer');
   const checkUpdate=async()=>{
@@ -91,10 +97,7 @@ export function apply(ctx){
     else setUpdateState({status:'current',label:'已是最新版',url:release.html_url||RELEASES_URL});
    }catch{setUpdateState({status:'unavailable',label:'打开更新页',url:RELEASES_URL});}
   };
-  return <div className="ecp-sidebar-control" data-wide={wide} data-enabled={saved.enabled}>
-   <button type="button" className="ecp-sidebar-open" data-state={state.state} aria-label={'回复美化设置（'+(saved.enabled?'已开启':'已关闭')+'）'} title={'回复美化设置 · '+statusLabel(state)} onClick={open}><span className="ecp-aa">Aa</span>{wide&&<span>回复美化</span>}</button>
-   {wide&&<button type="button" className="ecp-sidebar-switch" role="switch" aria-checked={saved.enabled} title={saved.enabled?'关闭回复美化':'开启回复美化'} onClick={()=>settings.update({enabled:!saved.enabled})}><i/></button>}
-   <dialog ref={ref} className="ecp-dialog ecp-final-dialog" aria-label="EchoCat 回复美化设置" onCancel={close} onClick={event=>{if(event.target===ref.current)close();}}>
+  return <dialog ref={ref} className="ecp-dialog ecp-final-dialog" aria-label="EchoCat 回复美化设置" onCancel={close} onClick={event=>{if(event.target===ref.current)close();}}>
     <div className="ecp-settings" onClick={event=>event.stopPropagation()}>
      <header className="ecp-dialog-head">
       <div className="ecp-dialog-intro"><small>ECHOCAT PRETTIER / {VERSION}</small><h2>回复美化工作室</h2><p>15 套视觉风格 × 9 套排版 DIY；展示更丰富，AI 原始答案保持不变。</p></div>
@@ -120,10 +123,18 @@ export function apply(ctx){
      </div>
      <footer className="ecp-footer"><button type="button" onClick={()=>setDraft(normalize(DEFAULTS))}>恢复默认</button><span>设置只保存在本机</span><button type="button" onClick={close}>取消</button><button type="button" className="ecp-save" onClick={save}>保存设置</button></footer>
     </div>
-   </dialog>
-  </div>;
+  </dialog>;
  }
- const disposers=[ctx.slots.inject('sidebar.footer.action',()=>ctx.slots.register({name:'sidebar.footer.action',id:'echocat-prettier',order:80,label:'回复美化'},SidebarControl))];
+ function SidebarPanelIcon({size=18,active=false}={}){return <span className="ecp-panel-glyph" data-active={active} style={{width:size,height:size,fontSize:Math.max(8,Math.round(size*.48))}} aria-hidden="true">Aa</span>;}
+ function SettingsLauncherPanel(){
+  useEffect(()=>{openSignal.open();const timer=setTimeout(()=>ctx.layout.selectPanel(null),0);return()=>clearTimeout(timer);},[]);
+  return <div className="ecp-panel-launcher" role="status">正在打开 EchoCat 回复美化设置…</div>;
+ }
+ const disposers=[
+  ctx.slots.inject('shell.overlay',()=>ctx.slots.register({name:'shell.overlay',id:'echocat-prettier-settings-dialog'},SettingsOverlay)),
+  ctx.slots.inject('main',()=>ctx.slots.register({name:'main',key:PANEL_ID},SettingsLauncherPanel)),
+  ctx.slots.inject('sidebar.panellist',()=>ctx.slots.register({name:'sidebar.panellist',id:PANEL_ID,order:20,label:'回复美化'},SidebarPanelIcon)),
+ ];
  let disposed=false;
  const dispose=()=>{if(disposed)return;disposed=true;for(const dialog of dialogs)dialog.close();for(const fn of disposers)fn?.();controller.dispose();style.remove();};
  ctx.effect(()=>dispose,'echocat-prettier:client');

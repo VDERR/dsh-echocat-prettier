@@ -128,12 +128,12 @@ test('storage corruption/denial remains usable and V2 takes precedence',()=>{
 });
 test('diagnostic output contains only version, adapter and counts',async()=>{
  const x=setup();await tick();const s=x.controller.status(),d=JSON.parse(diagnosticText(s));
- assert.equal(d.version,'0.23.5');assert.equal(d.matchedMessages,1);assert.deepEqual(Object.keys(d).sort(),['plugin','version','state','assistantRows','matchedMessages','proseBlocks','adapter'].sort());
+ assert.equal(d.version,'0.23.6');assert.equal(d.matchedMessages,1);assert.deepEqual(Object.keys(d).sort(),['plugin','version','state','assistantRows','matchedMessages','proseBlocks','adapter'].sort());
  assert.doesNotMatch(diagnosticText(s),/攻略|用户|path|token|secret/i);assert.match(statusLabel({...s,state:'unmatched'}),/未匹配/);finish(x);
 });
 test('host guidance stays opt-in while the passive same-origin meme route remains available',()=>{let called=0;hostApply({inject(){called++;}},{autoImages:false,naturalEmoji:false});assert.equal(called,1);});
 test('production bundle and package agree on version and DSH loader contract',()=>{
- const pkg=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));assert.equal(pkg.version,'0.23.5');
+ const pkg=JSON.parse(readFileSync(new URL('../package.json',import.meta.url),'utf8'));assert.equal(pkg.version,'0.23.6');
  let registration;vm.runInNewContext(readFileSync(new URL('../lib/client.js',import.meta.url),'utf8'),{window:{__ModuleLoader__:{load:x=>registration=x}}});
  assert.equal(registration.id,pkg.name);const api=registration.factory(id=>{assert.equal(id,'react');return {};});assert.equal(typeof api.apply,'function');
  const code=readFileSync(new URL('../lib/client.js',import.meta.url),'utf8');assert.match(code,/dsh-echocat-prettier\/api\/memes/);assert.doesNotMatch(code,/image\.baidu\.com\/search\/acjson|XMLHttpRequest|innerHTML\s*=|dangerouslySetInnerHTML/);
